@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "optimized-shifts"
+version = "0.1.0"
+description = ""
+authors = ["Keviinplz <kevin.pinochet@ug.uchile.cl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "0.104.1"
+asyncpg = "0.28.0"
+aiofiles = "23.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
