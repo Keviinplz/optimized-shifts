@@ -1,0 +1,51 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:16.0-alpine3.18
+    ports:
+      - 5432:5432
+    env_file:
+      - ./.env
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
+
+  redis:
+    image: redis:7.2.2-alpine3.18
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    command: celery -A celery_app.processer worker --loglevel=info --logfile=logs/celery.log
+    volumes:
+      - celery-logs:/logs
+    depends_on:
+      - redis
+    env_file:
+      - ./.env
+
+  celery-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    volumes:
+      - celery-logs:/logs
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+    ports:
+      - 5555:5555
+volumes:
+  celery-logs:
