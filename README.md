@@ -65,6 +65,9 @@ Dada las instrucciones del challenge, se consideraron los siguientes supuestos:
 - 🟢 Solución escrita en **Python** usando una base de datos **sql**.
 - 🟢 **Incluir contenedores** en la solución, dibujar como configurar la aplicación en **GCP**
     - La descripción de los contenedores se encuentra más abajo, se adjunta a continuación diagrama de configuración en **GCP**:
+ 
+![image](https://github.com/Keviinplz/optimized-shifts/assets/41240999/a3070e8b-f908-4829-8647-dec3920f3e1b)
+
 
 ## Levantamiento de la app
 
