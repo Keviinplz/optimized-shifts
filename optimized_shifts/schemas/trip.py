@@ -1,3 +1,5 @@
+""" Módulo que define los esquemas del modelo Trip, el cual representa un viaje de una persona """
+
 import json
 from datetime import datetime
 from typing import Any
@@ -6,6 +8,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class TripRequest(BaseModel):
+    """ Esquema para la petición de la API de crear un viaje """
     region: str
     origin: tuple[float, float]
     destination: tuple[float, float]
@@ -38,6 +41,7 @@ class TripRequest(BaseModel):
 
 
 class TripCreate(BaseModel):
+    """ Esquema para la creación de un viaje en la base de datos """
     region_id: int
     origin: tuple[float, float]
     destination: tuple[float, float]
@@ -46,6 +50,7 @@ class TripCreate(BaseModel):
 
 
 class TripInDB(BaseModel):
+    """ Esquema que representa un viaje en la base de datos """
     id: int = Field(..., alias="trip_id")
     region_id: int
     origin: tuple[float, float]

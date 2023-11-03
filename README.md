@@ -90,6 +90,37 @@ Y guardarlo en la carpeta raiz del repositorio.
 
 Finalmente levantar el proyecto con `docker compose up -d`
 
+## Estructura de carpetas
+
+La aplicación sigue la siguiente estructura de carpetas:
+
+```
+├── Dockerfile.backend   <- Dockerfile para la API
+├── Dockerfile.worker    <- Dockerfile para Celery
+├── README.md            <- Esta documentación
+├── client.py            <- Cliente de prueba para websocket 
+├── docker-compose.yaml  <- Manifiesto para levantar la aplicación
+├── fileupload           <- Carpeta donde se almacenan los archivos .csv que se quieren procesar
+├── init.sql             <- Inicialización de la base de datos
+├── main.py              <- Entrypoint de la API
+├── optimized_shifts     <- Codigo fuente de la API
+│   ├── celery           <- Configuración de Celery para el procesamiento
+│   ├── crud             <- CRUD para la base de datos
+│   ├── dependencies     <- Carpeta con utilidades para mantener estado de la API
+│   ├── handlers         <- Carpeta que maneja estados de error de la API
+│   ├── lifespan.py      <- Maneja el startup y el shutdown de la API
+│   ├── routes           <- Rutas de la API
+│   ├── schemas          <- Validación de datos de la API
+│   ├── state.py         <- Definición de estados globales
+│   └── ws.py            <- Websocket
+├── poetry.lock          
+├── pyproject.toml       <- Se usó poetry como gestor de dependencias
+├── tests                <- Carpeta con los tests de la API y del procesado
+│   ├── conftest.py
+│   ├── procesor
+│   └── routes
+```
+
 ## Descripción de la solución
 
 La solución contempla una API para consultar las estadisticas solicitadas, una cola de procesamiento (celery) para procesar los archivos y almacenarlos en la base de datos, y un websocket para el notificado del procesamiento.

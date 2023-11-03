@@ -1,3 +1,5 @@
+""" Módulo que define el comportamiento de inicio y cierre de la aplicación """
+
 import contextlib
 import os
 
@@ -10,6 +12,7 @@ from optimized_shifts.ws import ConnectionManager
 
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
+    """ Inicializa la base de datos y los estados globales, una vez finalizada cierra la conexión con la base de datos"""
     host = os.environ.get("POSTGRES_HOST")
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")

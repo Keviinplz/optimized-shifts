@@ -1,3 +1,5 @@
+""" Módulo que define las rutas de viajes """
+
 import asyncio
 import json
 from typing import Annotated, cast
@@ -19,6 +21,10 @@ router = APIRouter()
 
 @router.websocket("/trips/live")
 async def message_stream(websocket: WebSocket, manager: ConnectionManager = Depends(get_ws_manager)):
+    """ 
+    Websocket que se subscribe a una cola redis y envia a los usuarios una notificación cuando recibe un
+    mensaje desde Celery informando el estado de un procesamiento.
+    """
     await manager.connect(websocket)
 
     try:
@@ -63,6 +69,7 @@ async def handle_travels_request(
     ],
     db: Database = Depends(get_db),
 ):
+    """ Gestiona la petición de estadisticas de un viaje """
     px, py = southest.split(",")
     qx, qy = nortest.split(",")
 
@@ -82,6 +89,8 @@ async def handle_travels_request(
 async def handle_travels_insertion(
     insert_request: TripsInsertRequest, db: Database = Depends(get_db)
 ):
+    """ Gestiona la petición de inserción de viajes """
+    
     if insert_request.data_type != "json":
         result = process_data.delay(
             data_type=insert_request.data_type, data=insert_request.data
