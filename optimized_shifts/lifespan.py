@@ -5,6 +5,7 @@ import asyncpg
 from fastapi import FastAPI
 
 from optimized_shifts.state import state
+from optimized_shifts.ws import ConnectionManager
 
 
 @contextlib.asynccontextmanager
@@ -39,6 +40,7 @@ async def lifespan(app: FastAPI):
         raise Exception("Unable to connect with database")
 
     state["database"] = pool
+    state["manager"] = ConnectionManager()
 
     yield
 

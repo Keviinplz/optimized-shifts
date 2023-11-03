@@ -1,36 +1,40 @@
 import asyncio
+import json
 from typing import Annotated, cast
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
-from sse_starlette.sse import EventSourceResponse
 
 from optimized_shifts.celery.processer import process_data, pubsub
 from optimized_shifts.crud.region import RegionRepository
 from optimized_shifts.crud.trips import TripsRepository
-from optimized_shifts.dependencies import get_db
+from optimized_shifts.dependencies import get_db, get_ws_manager
 from optimized_shifts.schemas.api import TripsInsertRequest
 from optimized_shifts.schemas.trip import TripCreate
 from optimized_shifts.state import Database
+from optimized_shifts.ws import ConnectionManager
 
 router = APIRouter()
 
 
-@router.get("/trips/live")
-async def message_stream(request: Request):
-    async def listen_generator():
-        while True:
-            if await request.is_disconnected():
-                break
+@router.websocket("/trips/live")
+async def message_stream(websocket: WebSocket, manager: ConnectionManager = Depends(get_ws_manager)):
+    await manager.connect(websocket)
 
+    try:
+        while True:
+            if not await manager.is_websocket_active(websocket):
+                raise WebSocketDisconnect()
+            
             message = pubsub.get_message()
             if message:
-                yield {"data": f"{message}"}
-
-            await asyncio.sleep(1)
-
-    return EventSourceResponse(listen_generator())
-
+                notification = message["data"].decode()
+                await manager.broadcast(json.dumps({ "type": "notification", "data": notification }))
+                    
+            await asyncio.sleep(0.1)
+    except WebSocketDisconnect:
+        print("Client disconnected")
+        await manager.disconnect(websocket)
 
 @router.get("/trips/stats")
 async def handle_travels_request(

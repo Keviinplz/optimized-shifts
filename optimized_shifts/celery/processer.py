@@ -12,7 +12,7 @@ celery_app = Celery("processer")
 celery_app.config_from_object(celeryconfig)
 
 r = redis.Redis.from_url(celery_app.conf["BROKER_URL"])
-pubsub = r.pubsub()
+pubsub = r.pubsub(ignore_subscribe_messages=True)
 pubsub.subscribe("notifications")
 
 

@@ -17,8 +17,8 @@ services:
 
   redis:
     image: redis:7.2.2-alpine3.18
-    ports:
-      - 6379:6379
+    expose:
+      - 6379
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
@@ -29,6 +29,7 @@ services:
     command: celery -A celery_app.processer worker --loglevel=info --logfile=logs/celery.log
     volumes:
       - celery-logs:/logs
+      - ./fileupload:/app/files
     depends_on:
       - redis
     env_file:
@@ -47,5 +48,22 @@ services:
       - redis
     ports:
       - 5555:5555
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    command: uvicorn main:app --host=0.0.0.0 --port=8000
+    # command: sleep 1600
+    env_file:
+      - ./.env
+    depends_on:
+      - celery
+      - redis
+      - postgres
+    ports:
+      - 8000:8000
+    
+    
 volumes:
   celery-logs:
