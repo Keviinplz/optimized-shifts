@@ -66,8 +66,7 @@ Dada las instrucciones del challenge, se consideraron los siguientes supuestos:
 - 🟢 **Incluir contenedores** en la solución, dibujar como configurar la aplicación en **GCP**
     - La descripción de los contenedores se encuentra más abajo, se adjunta a continuación diagrama de configuración en **GCP**:
  
-![image](https://github.com/Keviinplz/optimized-shifts/assets/41240999/a3070e8b-f908-4829-8647-dec3920f3e1b)
-
+![image](https://github.com/Keviinplz/optimized-shifts/assets/41240999/c6a99294-a561-46d9-8d17-4887ae5eb2a5)
 
 ## Levantamiento de la app
 
@@ -261,7 +260,8 @@ Base de datos key-value en memoria, escogida para implementar sistema pub/sub, e
 
 Lo anterior se puede resumir en el siguiente diagrama:
 
-![image](https://github.com/Keviinplz/optimized-shifts/assets/41240999/e189e3e8-68ef-4fbb-bfd2-24856e617066)
+![image](https://github.com/Keviinplz/optimized-shifts/assets/41240999/aaf0f39a-0a6f-43a2-b871-7eb0907f7aac)
+
 
 ## Ok, quiero probar todo lo anterior...
 
