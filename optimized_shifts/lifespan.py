@@ -1,25 +1,45 @@
 import contextlib
 import os
-from typing import AsyncIterator
 
 import asyncpg
 from fastapi import FastAPI
 
-from optimized_shifts.state import State
+from optimized_shifts.state import state
 
 
 @contextlib.asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[State]:
-    pool = await asyncpg.create_pool(
-        host=os.environ.get("POSTGRES_HOST", "localhost"),
-        user=os.environ.get("POSTGRES_USER", "development"),
-        password=os.environ.get("POSTGRES_PASSWORD", "insecure-password"),
-        database=os.environ.get("POSTGRES_DB", "app"),
-    )
+async def lifespan(app: FastAPI):
+    host = os.environ.get("POSTGRES_HOST")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    database = os.environ.get("POSTGRES_DB")
+
+    try:
+        pool = await asyncpg.create_pool(
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+        )
+    except asyncpg.InvalidCatalogNameError:
+        sys_conn = await asyncpg.connect(
+            database="template1", user=user, password=password
+        )
+        await sys_conn.execute(f'CREATE DATABASE "{database}" OWNER "{user}"')
+
+        await sys_conn.close()
+        pool = await asyncpg.create_pool(
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+        )
 
     if not pool:
         raise Exception("Unable to connect with database")
 
-    yield {"database": pool}
+    state["database"] = pool
+
+    yield
 
     await pool.close()

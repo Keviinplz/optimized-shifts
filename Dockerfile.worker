@@ -19,7 +19,9 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
+COPY ./optimized_shifts/celery/cloud ./celery_app/cloud
 COPY ./optimized_shifts/celery/config ./celery_app/config
+COPY ./optimized_shifts/celery/tasks.py ./celery_app/tasks.py
 COPY ./optimized_shifts/celery/processer.py ./celery_app/processer.py
 COPY ./optimized_shifts/celery/__init__.py ./celery_app/__init__.py
 

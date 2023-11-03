@@ -3,3 +3,4 @@
 .vscode
 trips.csv
 .env
+.env.*
