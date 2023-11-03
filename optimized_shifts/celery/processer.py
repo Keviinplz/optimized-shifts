@@ -43,7 +43,7 @@ async def _process_data_async(
             {
                 "task_id": task_id,
                 "status": "DONE",
-                "message": "Succesfully inserted data to postgis",
+                "message": "Data successfully inserted in postgis",
             }
         ),
     )
