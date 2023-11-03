@@ -166,3 +166,5 @@ Base de datos key-value en memoria, escogida para implementar sistema pub/sub, e
 
 Lo anterior se puede resumir en el siguiente diagrama:
 
+![image](https://github.com/Keviinplz/optimized-shifts/assets/41240999/e189e3e8-68ef-4fbb-bfd2-24856e617066)
+
